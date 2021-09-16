@@ -7,7 +7,7 @@ public class Summer {
 		sleep(500);
 		System.out.println("The highlight of my summer was working and living "
 				+ "at a summer camp in Maine for 10 weeks. I "
-				+ "got to experience being fully responsible for not only myself "
+				+ "got to experience being responsible for not only myself "
 				+ "but also six ten year olds. It was really special because I have gone "
 				+ "to this camp for nine years, so it was nice to finally"
 				+ "be back as a counselor");
@@ -36,14 +36,7 @@ public class Summer {
 				+ "super fun! Also I visited my friend in New Hampshire and we got "
 				+ "to hike so that was great");		
 		sleep(1000);
-		
-		System.out.println("What was the best place you got to go this summer?");
-		sleep(500);
-		System.out.println("Although I loved my time in Maine, at the start of the "
-				+ "summer I got to go down to the cape a couple times and that was "
-				+ "super fun! Also I visited my friend in New Hampshire and we got "
-				+ "to hike so that was great");	
-		sleep(1000);
+
 		
 		System.out.println("What else did you do this summer?");
 		sleep(500);
