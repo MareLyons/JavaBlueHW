@@ -57,8 +57,7 @@ public class Summer {
 		
 	}
 
-
-// makes the program pause for half a second.
+//time from Mr. Friedmans code
 public static void sleep(int time) {
 	try {
 		Thread.sleep(time);
