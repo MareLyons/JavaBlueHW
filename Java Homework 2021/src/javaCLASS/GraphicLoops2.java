@@ -32,6 +32,8 @@ package javaCLASS;
 			growingCircles(g);
 			tenByTenCircles(g);
 			drawCheckerboard(g);
+			newColorRectangles(g);
+			shapePattern(g);
 			
 			
 		}
@@ -68,20 +70,60 @@ package javaCLASS;
 		//constant			
 		public void drawCheckerboard(Graphics g) {
 			for(int i = 0; i <= 20; i++) {
-				g.setColor(Color.red);
-				g.fillRect(i*20, 220, 10, 100);
-				for(int j = 0; j <= 20; j++) {
+				for(int j = 9; j <= 13; j++) {
+					g.setColor(Color.red);
 				    g.fillRect(300, j*20, 100, 10);
+				for(int w = 15; w <= 20; w++) {
+				    g.setColor(Color.blue);
+				    g.fillRect(w*20, 180, 10, 90);
 		
+				}
 				}
 			}
 				
 			}	
 		
-
+		public void newColorRectangles(Graphics g) {
+			int rc = 0;
+			int gc = 10;
+			int bc = 20;
+			for(int i = 0; i <= 50; i++) {
+				g.setColor(new Color(rc,gc,bc));
+				g.fillRect(i*20, 450, 10, 10);
+				rc += 10;
+				gc += 20;
+				bc += 30;
+				if (bc > 250)
+					bc = 0;
+				if (rc > 250)
+					rc = 0;
+				if (gc > 250)
+					gc = 0;
+				}
+		}
 		
-	
+		public void shapePattern(Graphics g) {
+			int circlex = 10;
+			int rectanglex = 0;
+			int trianglex = 20;
+			int trianglex2 = 30;
+			for(int i = 0; i <= 50; i++) {
+				g.setColor(Color.orange);
+			    g.fillOval(circlex, 400, 10, 10);
+				g.setColor(Color.blue);
+			    g.fillRect(rectanglex, 400, 10, 10);
+				g.setColor(Color.green);
+			    int[] x = {trianglex, trianglex2,trianglex};
+			    int[] y = {420, 410, 400};
+			    g.fillPolygon(x, y, 3);
+			    
+				circlex += 40;
+				rectanglex += 40;
+				trianglex += 40;
+				trianglex2 += 40;
 
+			}
+			}
 		//////////////////////////////////////
 		//////////////////////////////////////
 		
