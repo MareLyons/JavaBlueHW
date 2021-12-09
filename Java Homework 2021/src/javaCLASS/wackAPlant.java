@@ -37,15 +37,15 @@ public class wackAPlant {
 	
     //tube variables
     private int TUBEWIDTH = windowWidth/8;
-
 	private int TUBEHEIGHT = windowHeight/8;
 
     //locations of the tube and plants
     private int[] x, y;		
+    
     //keeps tracks of which plants show up
     private boolean[] showing;	
     
-    //variables for the ranges of random x and y points, str
+    //variables for the ranges of random x and y points, for tube locations, shifts make sure tubes are on grass and within width of window
     private int yrange = (int)(windowHeight * (.2)), ymin = (int)(windowHeight * (.6));
     private int xrange = windowWidth-(2*TUBEWIDTH), xmin = 0 +(TUBEHEIGHT);
   
@@ -56,7 +56,7 @@ public class wackAPlant {
     private boolean initialize = true;
    
     //extra feature instance variables
-    //boolean for special feature big plant
+    //boolean for special feature GIANT PLANT, keeps track of when that should be happening
     private int roundcount = 0;
     
     //extra feature large plant dimesions
@@ -82,6 +82,7 @@ public class wackAPlant {
         }
     }
 
+    //draws all display
     public void draw(Graphics g) {
     	int plantcount = 0; 
     	
@@ -94,25 +95,25 @@ public class wackAPlant {
 
         }
         
-        //the next 2 ifs and the else draw my plants
         //draws my first "round" of plants
         if(initialize) {
         	while(plantcount < NUMAPPEARING) { //draws the proper amount of plants
-        			g.drawImage(plantImg, x[plantcount]+30, y[plantcount]-15, PLANTWIDTH, PLANTHEIGHT, null); //draws the plant above the tube
-        			showing[plantcount] = true;//fills in showing to remeber which indexes are already drawn
+        			//draws the plant above the tube 
+        			g.drawImage(plantImg, x[plantcount]+30, y[plantcount]-15, PLANTWIDTH, PLANTHEIGHT, null); //(30 and 15 shift plant so it is in the center of tube)
+        			showing[plantcount] = true;//fills in showing to remeber which plants are already drawn
         			plantcount++;//moves onto the next index
         	}
-        	plantcount = 0;//makes the index not go out of bounds, so  plants can be redrawn
+        	plantcount = 0;//makes the index not go out of bounds, so  plants can be redrawn and proper amount of plants are drawn
         	initialize = false;//makes sure this loop doesnt happen again
         }
         
-        //draws the plants when which indexes that are being drawn are staying the same
+        //draws the plants when plants (indexes) that are being drawn not changing
         for(int i = 0; i < showing.length; i++) {
-        	if(showing[i]){
+        	if(showing[i]){//checks if plant is already showing and thus should be redrawn in same place
             	if(roundcount % 10 != 0) { //checks if special feature should be happening 
-            		g.drawImage(plantImg, x[i]+30, y[i]-15, PLANTWIDTH, PLANTHEIGHT, null); //draws the plant above the tube if it shouldnt happen 30 and 15 shift plant so it is in the center of tube
+            		g.drawImage(plantImg, x[i]+30, y[i]-15, PLANTWIDTH, PLANTHEIGHT, null); //draws the plant above the tube if speacial feature shouldnt happen 30 and 15 shift plant so it is in the center of tube
             		}
-            	else if (roundcount % 10 == 0) {//checks if the special feature should be happening
+            	else if (roundcount % 10 == 0) {//checks if the special feature should be happening, occurs every 10 rounds
             		g.drawImage(plantImg, x[i]+10, y[i]-40, GIANTPLANTWIDTH, GIANTPLANTHEIGHT, null); //draws the GIANT plant above the tube 10 and 40 shift plant so it is in the center of tube
             	}
         	}
@@ -121,26 +122,26 @@ public class wackAPlant {
 
         
 
-    // what you want to happen when the mouse is clicked
+    // what you want to happen when the plant is clicked (add to score and have plant dispear)
     public void click(int mouseX, int mouseY) {
     	for(int i = 0; i < x.length; i++) {
-    		//checks if the mouse clicks on the plant // 30 and 15 shift plant so it is in the center of tube
+    		//checks if the mouse clicks on the plant // 30 and 15 shift plant so it is in the center of tube, 
     		if(mouseX < (x[i]+30) + (PLANTWIDTH) && mouseX > (x[i]+30) && mouseY < (y[i]-15) + (PLANTHEIGHT) && mouseY > (y[i]-15)) {
     			//if it clicks on the plant...
-    			if (roundcount % 10 == 0) {
-    				score += 5; //adds to score if they click giant plant
+    			if (roundcount % 10 == 0) { //checks if giant plant (special feature) is in play
+    				score += 5; //adds 5 to score if they click giant plant
     			}
     			else {
-    				score ++; //adds to score if they click normal plant
+    				score ++; //adds 1 to score if they click normal plant
     			}
-    			showing[i]=false; //makes plant disappear
+    			showing[i]=false; //makes plant disappear after it has been clicked
     		}
     	}
     }
     	
     
     
-    // what you want to happen when the time for the current round ends
+    // what you want to happen when the time for the current round ends (change  which plants are drawn radomly)
     public void timeAdvance() {
     	int plantcount = 0;//resets plant count so we can redraw plants
     	showing = new boolean[NUMTUBES];
@@ -159,7 +160,7 @@ public class wackAPlant {
     	
     // reset the games when user presses the button
     public void reset() {
-    	//changes variables to make sizing work, if user resizes window
+    	//changes variables to make sizing fit in the case the user resizes window
     	yrange = (int)(windowHeight * (.2)); ymin = (int)(windowHeight * (.6));
         xrange = windowWidth - (2*TUBEWIDTH); xmin = 0 +(TUBEHEIGHT);
 
