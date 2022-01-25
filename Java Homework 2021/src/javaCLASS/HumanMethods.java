@@ -2,7 +2,8 @@ package javaCLASS;
 
 public class HumanMethods {
 
-	private double age, gender;
+	private int age, age2;
+	private char gender, gender2;
 	
 	// an example method to use as a guideline
 	public void age(int x) {
@@ -10,6 +11,13 @@ public class HumanMethods {
 	}
 	public void gender(char y) {
 		gender = y;
+	}
+	
+	public void age2(int x) {
+		age2 = x;
+	}
+	public void gender2(char y) {
+		gender2 = y;
 	}
 	
 	public void canVote() {
@@ -69,6 +77,10 @@ public class HumanMethods {
 			tester.age(4);
 			
 			tester.gender('b');
+			
+			tester.age2(4);
+			
+			tester.gender2('b');
 			
 			tester.canVote();
 			
