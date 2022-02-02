@@ -35,7 +35,7 @@ public class Photoshop extends Component {
         for(int i = 0; i < pixels.length; i++) {
     		for(int j = 0; j < pixels[i].length;j++) { 
     			//acess the rgb of the old color and adds how much the user wants it to be brightened by
-    			int r = pixels[i][j].getRed() + amount; 
+    			int r = pixels[i][j].getRed() + amount;  
     			int g = pixels[i][j].getGreen() + amount; 
     			int b = pixels[i][j].getBlue() + amount; 
     			
