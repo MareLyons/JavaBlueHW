@@ -20,40 +20,43 @@ public class Board {
 		// loads the images into a map
 		HashMap<String, Image> images = loadImages();
 		
-		
-		board[3][7] = new King(1, images.get("BlackKing.png"));
-		board[3][0] = new King(0, images.get("WhiteKing.png"));
+		//intializes 2 Kings (keeps track of position for check mate)
+		board[3][7] = new King(1, images.get("BlackKing"));
+		board[3][0] = new King(0, images.get("WhiteKing"));
 		kingPositions[0] = new int[]{3, 0};
 		kingPositions[1] = new int[] {3, 7};
 		
-		board[4][7] = new Queen(1, images.get("BlackQueen.png"));
-		board[4][0] = new Queen(0, images.get("WhiteQueen.png"));
+		//intializes 2 Queens
+		board[4][7] = new Queen(1, images.get("BlackQueen"));
+		board[4][0] = new Queen(0, images.get("WhiteQueen"));
 
-		
-		board[1][7] = new Knight(1, images.get("BlackKnight.png"));
-		board[6][7] = new Knight(1, images.get("BlackKnight.png"));
-		board[1][0] = new Knight(0, images.get("WhiteKnight.png"));
-		board[6][0] = new Knight(0, images.get("WhiteKnight.png"));
+		//intializes 2 Knights
+		board[1][7] = new Knight(1, images.get("BlackKnight"));
+		board[6][7] = new Knight(1, images.get("BlackKnight"));
+		board[1][0] = new Knight(0, images.get("WhiteKnight"));
+		board[6][0] = new Knight(0, images.get("WhiteKnight"));
 
-		
-		board[2][7] = new Bishop(1, images.get("BlackBishop.png"));
-		board[5][7] = new Bishop(1, images.get("BlackBishop.png"));
-		board[2][0] = new Bishop(0, images.get("WhiteBishop.png"));
-		board[5][0] = new Bishop(0, images.get("WhiteBishop.png"));
+		//intializes 2 Bishops
+		board[2][7] = new Bishop(1, images.get("BlackBishop"));
+		board[5][7] = new Bishop(1, images.get("BlackBishop"));
+		board[2][0] = new Bishop(0, images.get("WhiteBishop"));
+		board[5][0] = new Bishop(0, images.get("WhiteBishop"));
 
-		
-		board[0][7] = new Bishop(1, images.get("BlackRook.png"));
-		board[7][7] = new Bishop(1, images.get("BlackRook.png"));
-		board[0][0] = new Bishop(0, images.get("WhiteRook.png"));
-		board[7][0] = new Bishop(0, images.get("WhiteRook.png"));
+		//intializes 2 Rooks
+		board[0][7] = new Rook(1, images.get("BlackRook"));
+		board[7][7] = new Rook(1, images.get("BlackRook"));
+		board[0][0] = new Rook(0, images.get("WhiteRook"));
+		board[7][0] = new Rook(0, images.get("WhiteRook"));
 
+		//intializes Black Pawns
 		for(int i = 0; i < board.length; i++) {
-			board[i][6] = new Pawn(1, images.get("BlackPawn.png"));
+			board[i][6] = new Pawn(1, images.get("BlackPawn"));
 		}
+		//intializes White Pawns
 		for(int i = 0; i < board.length; i++) {
-			board[i][1] = new Pawn(0, images.get("WhitePawn.png"));
+			board[i][1] = new Pawn(0, images.get("WhitePawn"));
 		}
-		
+		//intializes Empty spaces
 		for(int i = 0; i < board.length; i++) {
 			for(int j = 2; j < 6; j++) {
 				board[i][j] = new Empty();
@@ -62,18 +65,38 @@ public class Board {
 					
 	}
 	
-	// draws the board. There should be a grid of 8x8 squares, and each piece in their location. 
-	// the last clicked piece (curr) should be drawn on a yellow background.
+	
 	public void draw(Graphics g, Piece curr) {
 		
 		int sw = Chess.SQUARE_WIDTH;	// the width of each square on the board
 		
+		//goes through and draws the checkered board
 		for(int i = 0; i < board.length; i++) {
 			for(int j = 0; j < board.length; j++) {
-				System.out.println(board[i][j].getClass());
-				board[i][j].draw(g,i*sw,j*sw);
+				//draws every other square red
+				if(i%2 == j%2) {
+					g.setColor(Color.RED);
+					g.fillRect(j*sw,i*sw,sw, sw);
+				}
+				//draws all other squares white
+				else {
+					g.setColor(Color.WHITE);
+					g.fillRect(j*sw,i*sw,sw,sw);
+				}
+				//makes the last clicked piece drawn on a yellow background
+				if(board[i][j] == curr) {
+					g.setColor(Color.YELLOW);
+					g.fillRect(j*sw,i*sw,sw, sw);
+				}
 			}
 		}
+		
+		//draws the image for each piece
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board.length; j++) {
+				board[i][j].draw(g,j*sw,i*sw);
+			}
+		}	
 		
 	}
 	
