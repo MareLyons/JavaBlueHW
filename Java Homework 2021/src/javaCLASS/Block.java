@@ -3,7 +3,7 @@ package javaCLASS;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Block extends ListFallingBlocks{
+public class Block{
 	
 private int x, y, speed;
 private Color color;

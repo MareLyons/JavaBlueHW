@@ -92,7 +92,6 @@ package javaCLASS;
 					Thread.sleep(60);
 				}
 				catch(InterruptedException e) {
-					System.out.print("yes");
 				}
 			}
 		}
