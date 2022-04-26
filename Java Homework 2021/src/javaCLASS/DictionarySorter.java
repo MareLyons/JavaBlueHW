@@ -49,14 +49,37 @@ public class DictionarySorter{
 	}
 	
 	public void mergeSort(List<String> words, int start, int end) {
-		
-		// your code here
+		if(start < end) {
+			int middle = (start+end)/2;
+			mergeSort(words, start, middle);
+			mergeSort(words, middle+1,end);
+			merge(words,start,middle,end);
+		}
 
 	}
 	
 	public void merge(List<String> words, int start, int mid, int end) {
 
-		// your code here
+		List<String> temp = new ArrayList<String>();
+		int i = start, j = mid +1;
+		while(i<=mid && j<=end) {
+			if(words.get(i).compareTo(words.get(j))<0){
+				temp.add(words.get(i));
+				i++;
+			}
+			else {
+				temp.add(words.get(j));
+			}
+		}
+		while(i<=mid) {
+			temp.add(words.get(i));
+			i++;
+		}
+		int k = start;
+		for(String s: temp) {
+			words.set(k, s);
+			k++;
+		}
 
 	}
 	
