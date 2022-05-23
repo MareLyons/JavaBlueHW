@@ -41,6 +41,10 @@ package twentyfourtyeight;
 			y += dY;
 		}
 		
+		public int GetValue() {
+			return(value);
+		}
+		
 		//returns the speed
 		public int getSpeedX() {
 			return(speedx);

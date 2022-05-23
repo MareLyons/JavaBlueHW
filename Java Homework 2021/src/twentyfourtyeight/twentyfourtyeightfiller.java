@@ -17,7 +17,7 @@ package twentyfourtyeight;
 		
 		// constants for various aspects of the game
 		// feel free to change them to make the game harder/easier
-		private final int WIDTH = 700, HEIGHT = 700, TILESPEEDX = 10,TILESPEEDY = 10,
+		private final int WIDTH = 700, HEIGHT = 700,
 						 GRIDCOLUMNS = 4, GRIDROWS = 4, GRIDWIDTH = (WIDTH/35), GRIDHEIGHT = (HEIGHT/35);
 		private final int  TILEWIDTH = (WIDTH/4), TILEHEIGHT = (HEIGHT/4);
 		
@@ -26,63 +26,94 @@ package twentyfourtyeight;
 		Tile [][] tiles =  new Tile [GRIDCOLUMNS][GRIDROWS];
 		
 		// booleans to keep track of the game's progress
-		private boolean lost = false;
+		private boolean lost = false, full = true, blocked;
 		private boolean won = false;
-		
-		private boolean right = false, left = false, up = false, down = false;
-		
+
 		
 		// move the aliens, the lasers, and the player. Loops aliens when necessary, 
 		// and randomly shoots lasers from the aliens
 		public void move() {
-					
-						
-						
-						
-						
-
-////							if(noleft == false) {
-//								tiles[j][i].setSpeedX(0);
-//								System.out.println("stopped left");
-//							}
-//							noleft = true;
-////							noright = false;
-//						}
-////							if(noright == false) {
-////								tiles[j][i].setSpeedX(0);
-////								System.out.println("stopped right");
-////							}
-////							noright = true;
-////							noleft = false;
-//						}
-////							if(noup == false) {
-////								tiles[j][i].setSpeedY(0);
-////								System.out.println("stopped up");
-////							}
-////							noup = true;
-////							nodown = false;
-//						}
-////							if(nodown == false) {
-//								tiles[j][i].setSpeedY(0);
-//								System.out.println("stopped down");
-//								
-//							}
-//							nodown = true;
-//							noup = false;
-//						}
-//						tiles[j][i].moveX(tiles[j][i].getSpeedX());
-//						tiles[j][i].moveY(tiles[j][i].getSpeedY());
 		}
 	
 		
 		// check for collisions between alien lasers and the player
 		// and between player lasers and the aliens
 		// check if the aliens have reached the ground
-		public void checkCollisions() {
+		public void checkWin() {	
+			
+			blocked = false;
+
+				for(int i = 0; i < GRIDROWS; i++) {
+					for(int j = 0; j < GRIDCOLUMNS; j++) {
+						if(tiles[j][i] != null) { 
+							try {
+								if(tiles[j+1][i] != null && tiles[j][i].GetValue() != tiles[j+1][i].GetValue()) {
+									blocked = true;
+								}
+							}
+							catch(ArrayIndexOutOfBoundsException e) {
+								
+							}
+							
+							try {
+								if(tiles[j][i+1] != null && tiles[j][i].GetValue() != tiles[j][i+1].GetValue()) {
+									blocked = true;
+								}
+							}
+							catch(ArrayIndexOutOfBoundsException e) {
+								
+							}
+							
+							try {
+								if(tiles[j-1][i] != null && tiles[j][i].GetValue() != tiles[j-1][i].GetValue()) {
+									blocked = true;
+								}
+							}
+							catch(ArrayIndexOutOfBoundsException e) {
+									
+							}
+							
+							try {
+								if(tiles[j][i-1] != null && tiles[j][i].GetValue() != tiles[j][i-1].GetValue()) {
+									blocked = true;
+								}
+							}
+							catch(ArrayIndexOutOfBoundsException e) {
+								
+							}
+						}
+						
+					}
+				}
+
 			
 			
+			full = true;
+			for(int i = 0; i < GRIDROWS; i++) {
+				for(int j = 0; j < GRIDCOLUMNS; j++) {
+					if(tiles[j][i] == null) {
+						full = false;
+					}
+				}
+			}
 			
+	
+			if(blocked == true && full == true) {
+				lost = true;
+			}
+			
+			for(int i = 0; i < GRIDROWS; i++) {
+				for(int j = 0; j < GRIDCOLUMNS; j++) {
+					if(tiles[j][i] != null) {
+						if(tiles[j][i].GetValue() == 2048) {
+							won = true;
+						}
+					}
+				}
+			}
+
 		}
+			
 		
 		// set up your variables, lists, etc here
 		public void setup() {
@@ -97,13 +128,6 @@ package twentyfourtyeight;
 			}	
 		}
 		
-		// fires a player laser. if there are currently less than 4 lasers on the screen,
-		// adds to the list. if there are 4 lasers on the screen, removes a laser and 
-		// replaces it with this new one
-		public void fireLaser() {
-			
-			// your code here
-		}
 		
 		// draw a black background along with your lasers, aliens, and player here
 		public void draw(Graphics g) {
@@ -131,10 +155,22 @@ package twentyfourtyeight;
 			
 			
 			g.setColor(Color.blue);
-			if (lost) 
+			if (lost) {
+				for(int i = 0; i < GRIDROWS; i++) {
+					for(int j = 0; j < GRIDCOLUMNS; j++) {
+						tiles[j][i] = null;
+					}
+				}
 				g.drawString("You lose", WIDTH/2-25, HEIGHT/2);
-			if (won) 
+			}
+			if (won) {
+				for(int i = 0; i < GRIDROWS; i++) {
+					for(int j = 0; j < GRIDCOLUMNS; j++) {
+						tiles[j][i] = null;
+					}
+				}
 				g.drawString("You win!", WIDTH/2-25, HEIGHT/2);
+			}
 		}
 		
 		// ******* DON'T TOUCH BELOW CODE ************//
@@ -166,112 +202,172 @@ package twentyfourtyeight;
 			
 			while (true) {
 					move();
-					checkCollisions();
+					checkWin();
 					frame.getContentPane().repaint();
 				try {Thread.sleep(20);} 
 				catch (InterruptedException e) {}
 			}
 		}
 		
+		//makes the tiles move right when the user presses the right arrow, and combine if they reach an equal value tile
 		private class RightAction extends AbstractAction {
 			public void actionPerformed(ActionEvent e) {
-				for(int i = GRIDROWS; i >= 0; i--) {
-					for(int j = 0; j <= GRIDCOLUMNS; j++) {
-						if(tiles[j][i] != null) {
-							tiles[j][i] = tiles[j][GRIDROWS];	
-						}
-					}
-				}
-//				if(noright == false) {
-//					for(int i = 0; i < GRIDCOLUMNS; i++) {
-//						for(int j = 0; j < GRIDROWS; j++) {
-//							if(tiles[j][i] != null) {
-//								tiles[j][i].setSpeedX(TILESPEEDX);
-//								System.out.print("nay");
-//							}
-//						}
-//					}
-//				}
-			}
-		}
-		
-		private class LeftAction extends AbstractAction {
-			public void actionPerformed(ActionEvent e) {
-				for(int i = 0; i <= GRIDROWS; i++) {
-					for(int j = 0; j <= GRIDCOLUMNS; j++) {
-						if(tiles[j][i] != null) {
-							tiles[j][i] = tiles[j][0+i];
-						}
-					}
-				}
-//				if(noleft == false) {
-//					for(int i = 0; i < GRIDCOLUMNS; i++) {
-//						for(int j = 0; j < GRIDROWS; j++) {
-//							if(tiles[j][i] != null) {
-//								tiles[j][i].setSpeedX(-TILESPEEDX);
-//								System.out.print("okay");
-//							}
-//						}
-//					}
-//				}
-			}
-		}
-		
-		private class UpAction extends AbstractAction {
-			public void actionPerformed(ActionEvent e) {
-				for(int i = 0; i <= GRIDROWS; i++) {
-					for(int j = 0; j <= GRIDCOLUMNS; j++) {
-						if(tiles[j][i] != null) {
-							tiles[j][i] = tiles[0+j][i];
-						}
-					}
-				}
-
-//				if(noup == false) {
-//					for(int i = 0; i < GRIDCOLUMNS; i++) {
-//						for(int j = 0; j < GRIDROWS; j++) {
-//							if(tiles[j][i] != null) {
-//								tiles[j][i].setSpeedY(-TILESPEEDY);
-//								System.out.print("yay");
-//							}
-//						}
-//					}
-//				}
-			}
-		}
-		
-		private class DownAction extends AbstractAction {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("hi");
-				for(int i = 0; i <= GRIDROWS-1; i++) {
-					System.out.println(i + "i");
-
-					for(int j = GRIDCOLUMNS-1; j >= 0; j--) {
-						System.out.println(j+ "j");
-						if(tiles[j][i] != null)
-							for(int w = GRIDROWS-1; w >= 0; w--) {	
-								System.out.println(w + "w");
-
-							if(tiles[w][i] == null) {
-								tiles[w][i] = tiles[j][i];
-								tiles[j][i] = null;
-								break;
+				//goes through the tiles 
+				for(int i = GRIDROWS-1; i >= 0; i--) {
+					for(int j = 0; j < GRIDCOLUMNS; j++) {
+						//checks if the tile isnt empty or if it isnt on the edge of the board
+						if(tiles[j][i] != null && i != 3) {
+							//if thats true goes through the tiles rowwise, starting all the way right
+							for(int w = GRIDROWS-1; w > i; w--) {
+								//if the tile in the row is empty...
+								if(tiles[j][w] == null) {
+									//moves the current tile to that empty spot
+									tiles[j][w] = tiles[j][i];
+									tiles[j][w].x = (TILEWIDTH * w)+(GRIDWIDTH);
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+								//if the tile in the row isnt empty, but its equal to the current tiles value...
+								else if(tiles[j][w] != null && tiles[j][w].GetValue() == tiles[j][i].GetValue()){
+									//combines the tiles to make them equal to the next largest tile (their sum)
+									tiles[j][w] = (new Tile(tiles[j][w].x, tiles[j][w].y,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/" + 2*tiles[j][i].GetValue()+".png", (2*tiles[j][i].GetValue()),0,0));
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
 							}
 						}
 					}
 				}
+				//after the tiles have been moved this spawns a new 2 tile
+				int randomx = (int) (Math.random()*4 + 0);
+				int randomy = (int) (Math.random()*4 + 0);
+				if(tiles[randomy][randomx] == null) {
+					tiles[randomy][randomx] = (new Tile((randomx * TILEWIDTH)+GRIDWIDTH , (randomy * TILEHEIGHT)+GRIDHEIGHT,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/2.png", 2,0,0));
+				}
 			}
-//				if(nodown == false) {
-//					for(int i = 0; i < GRIDCOLUMNS; i++) {
-//						for(int j = 0; j < GRIDROWS; j++) {
-//							if(tiles[j][i] != null) {
-//								tiles[j][i].setSpeedY(TILESPEEDY);
-//								System.out.print("wooo");
-//							}
-//						}
-//					}
-//				}
-//			}
+		}
+
+		//makes the tiles move left when the user presses the left arrow, and combine if they reach an equal value tile
+		private class LeftAction extends AbstractAction {
+			public void actionPerformed(ActionEvent e) {
+				//goes through the tiles 
+				for(int i = 0; i < GRIDROWS; i++) {
+					for(int j = 0; j < GRIDCOLUMNS; j++) {
+						//checks if the tile isnt empty or if it isnt on the edge of the board
+						if(tiles[j][i] != null && i != 0) {
+							//if thats true goes through the tiles rowwise, starting all the way right
+							for(int w = 0; w < i; w++) {
+								//if the tile in the row is empty...
+								if(tiles[j][w] == null) {
+									//moves the current tile to that empty spot
+									tiles[j][w] = tiles[j][i];
+									tiles[j][w].x = (TILEWIDTH * w)+(GRIDWIDTH);
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+								//if the tile in the row isnt empty, but its equal to the current tiles value...
+								else if(tiles[j][w] != null && tiles[j][w].GetValue() == tiles[j][i].GetValue()){
+									//combines the tiles to make them equal to the next largest tile (their sum)
+									tiles[j][w] = (new Tile(tiles[j][w].x, tiles[j][w].y,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/" + 2*tiles[j][i].GetValue()+".png", 2*tiles[j][i].GetValue(),0,0));
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+							}
+						}
+					}
+				}
+				//after the tiles have been moved this spawns a new 2 tile
+				int randomx = (int) (Math.random()*4 + 0);
+				int randomy = (int) (Math.random()*4 + 0);
+				if(tiles[randomy][randomx] == null) {
+					tiles[randomy][randomx] = (new Tile((randomx * TILEWIDTH)+GRIDWIDTH , (randomy * TILEHEIGHT)+GRIDHEIGHT,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/2.png", 2,0,0));
+				}
+			}
+		}
+		
+		//makes the tiles move up when the user presses the up arrow, and combine if they reach an equal value tile
+		private class UpAction extends AbstractAction {
+			public void actionPerformed(ActionEvent e) {
+				//goes through the tiles 
+				for(int i = 0; i < GRIDROWS; i++) {
+					for(int j = 0; j < GRIDROWS; j++) {
+						//checks if the tile isnt empty or if it isnt on the edge of the board
+						if(tiles[j][i] != null && j != 0) {
+							//if thats true goes through the tiles columnwise, starting all the way right
+							for(int w = 0; w < j; w++) {	
+								//if the tile in the column is empty...
+								if(tiles[w][i] == null) {
+									//moves the current tile to that empty spot
+									tiles[w][i] = tiles[j][i];
+									tiles[w][i].y = (TILEWIDTH * w)+GRIDWIDTH;
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+								//if the tile in the column isnt empty, but its equal to the current tiles value...
+								else if(tiles[w][i] != null && tiles[w][i].GetValue() == tiles[j][i].GetValue()){
+									//combines the tiles to make them equal to the next largest tile (their sum)
+									tiles[w][i] = (new Tile(tiles[w][i].x, tiles[w][i].y,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/" + 2*tiles[j][i].GetValue()+".png", 2*tiles[j][i].GetValue(),0,0));
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+							}
+						}
+					}
+				}
+				//after the tiles have been moved this spawns a new 2 tile
+				int randomx = (int) (Math.random()*4 + 0);
+				int randomy = (int) (Math.random()*4 + 0);
+				if(tiles[randomy][randomx] == null) {
+					tiles[randomy][randomx] = (new Tile((randomx * TILEWIDTH)+GRIDWIDTH , (randomy * TILEHEIGHT)+GRIDHEIGHT,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/2.png", 2,0,0));
+				}
+
+			}
+		}
+		
+		//makes the tiles move down when the user presses the down arrow, and combine if they reach an equal value tile
+		private class DownAction extends AbstractAction {
+			public void actionPerformed(ActionEvent e) {
+				//goes through the tiles 
+				for(int i = 0; i < GRIDROWS; i++) {
+					for(int j = GRIDCOLUMNS-1; j >= 0; j--) {
+						//checks if the tile isnt empty or if it isnt on the edge of the board
+						if(tiles[j][i] != null && j != 3) {
+							//if thats true goes through the tiles columnwise, starting all the way right
+							for(int w = GRIDROWS-1; w > j; w--){	
+								//if the tile in the column is empty...
+								if(tiles[w][i] == null) {
+									//moves the current tile to that empty spot
+									tiles[w][i] = tiles[j][i];
+									tiles[w][i].y = (TILEWIDTH * w)+GRIDWIDTH;
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+								//if the tile in the column isnt empty, but its equal to the current tiles value...
+								else if(tiles[w][i] != null && tiles[w][i].GetValue() == tiles[j][i].GetValue()){
+									//combines the tiles to make them equal to the next largest tile (their sum)
+									tiles[w][i] = (new Tile(tiles[w][i].x, tiles[w][i].y,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/" + 2*tiles[j][i].GetValue()+".png", 2*tiles[j][i].GetValue(),0,0));
+									//makes where the tile was null
+									tiles[j][i] = null;
+									break;
+								}
+							}
+						}
+					}
+				}
+				//after the tiles have been moved this spawns a new 2 tile
+				int randomx = (int) (Math.random()*4 + 0);
+				int randomy = (int) (Math.random()*4 + 0);
+				if(tiles[randomy][randomx] == null) {
+					tiles[randomy][randomx] = (new Tile((randomx * TILEWIDTH)+GRIDWIDTH , (randomy * TILEHEIGHT)+GRIDHEIGHT,TILEWIDTH-GRIDHEIGHT,TILEHEIGHT-GRIDHEIGHT, "Images/2.png", 2,0,0));
+				}
+			}
 		}
 
 		public static void main(String[] args) {
