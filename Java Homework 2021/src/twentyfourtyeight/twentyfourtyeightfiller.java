@@ -1,6 +1,7 @@
 package twentyfourtyeight;
 
 	// Space Invaders Filler Code by Mr. David, edited to make work for 2048
+    //By Marianne Lyons
 
 	import java.awt.Color;
 	import java.awt.Graphics;
@@ -15,109 +16,115 @@ package twentyfourtyeight;
 
 	public class twentyfourtyeightfiller {
 		
-		// constants for various aspects of the game
-		// feel free to change them to make the game harder/easier
+		// constants for the board and tile dimensions
 		private final int WIDTH = 700, HEIGHT = 700,
 						 GRIDCOLUMNS = 4, GRIDROWS = 4, GRIDWIDTH = (WIDTH/35), GRIDHEIGHT = (HEIGHT/35);
 		private final int  TILEWIDTH = (WIDTH/4), TILEHEIGHT = (HEIGHT/4);
-		
-		
-		// our list of Tiles		
+
+		//list of Tiles		
 		Tile [][] tiles =  new Tile [GRIDCOLUMNS][GRIDROWS];
 		
 		// booleans to keep track of the game's progress
-		private boolean lost = false, full = true, blocked;
+		private boolean lost = false, full = true, blocked = true;
 		private boolean won = false;
 
-		
-		// move the aliens, the lasers, and the player. Loops aliens when necessary, 
-		// and randomly shoots lasers from the aliens
-		public void move() {
-		}
-	
-		
-		// check for collisions between alien lasers and the player
-		// and between player lasers and the aliens
-		// check if the aliens have reached the ground
+
+		// checks if the player has won or lost the game
 		public void checkWin() {	
 			
 			blocked = false;
-
-				for(int i = 0; i < GRIDROWS; i++) {
-					for(int j = 0; j < GRIDCOLUMNS; j++) {
-						if(tiles[j][i] != null) { 
-							try {
-								if(tiles[j+1][i] != null && tiles[j][i].GetValue() != tiles[j+1][i].GetValue()) {
-									blocked = true;
-								}
-							}
-							catch(ArrayIndexOutOfBoundsException e) {
-								
-							}
-							
-							try {
-								if(tiles[j][i+1] != null && tiles[j][i].GetValue() != tiles[j][i+1].GetValue()) {
-									blocked = true;
-								}
-							}
-							catch(ArrayIndexOutOfBoundsException e) {
-								
-							}
-							
-							try {
-								if(tiles[j-1][i] != null && tiles[j][i].GetValue() != tiles[j-1][i].GetValue()) {
-									blocked = true;
-								}
-							}
-							catch(ArrayIndexOutOfBoundsException e) {
-									
-							}
-							
-							try {
-								if(tiles[j][i-1] != null && tiles[j][i].GetValue() != tiles[j][i-1].GetValue()) {
-									blocked = true;
-								}
-							}
-							catch(ArrayIndexOutOfBoundsException e) {
-								
-							}
-						}
-						
-					}
-				}
-
-			
-			
-			full = true;
+			//checks if there are possible moves for the board or if it is "blocked"
+			//goes through all the tiles
 			for(int i = 0; i < GRIDROWS; i++) {
 				for(int j = 0; j < GRIDCOLUMNS; j++) {
+					if(tiles[j][i] != null) { 
+						//makes sure there is no out of bounds exception
+						try {
+							//checks if the tile below the current tile doesnt equal the current tiles value
+							if(tiles[j+1][i] != null && tiles[j][i].GetValue() != tiles[j+1][i].GetValue()) {
+								//if so blocked is still true
+								blocked = true;
+							}
+						}
+						catch(ArrayIndexOutOfBoundsException e) {
+								
+						}
+						//makes sure there is no out of bounds exception	
+						try {
+							//checks if the tile to the right of the current tile doesnt equal the current tiles value
+							if(tiles[j][i+1] != null && tiles[j][i].GetValue() != tiles[j][i+1].GetValue()) {
+								//if so blocked is still true
+								blocked = true;
+							}
+						}
+						catch(ArrayIndexOutOfBoundsException e) {
+								
+						}
+						//makes sure there is no out of bounds exception	
+						try {
+							//checks if the tile above the current tile doesnt equal the current tiles value
+							if(tiles[j-1][i] != null && tiles[j][i].GetValue() != tiles[j-1][i].GetValue()) {
+								//if so blocked is still true
+								blocked = true;
+							}
+						}
+						catch(ArrayIndexOutOfBoundsException e) {
+									
+						}
+						//makes sure there is no out of bounds exception	
+						try {
+							//checks if the tile to the right of the current tile doesnt equal the current tiles value
+							if(tiles[j][i-1] != null && tiles[j][i].GetValue() != tiles[j][i-1].GetValue()) {
+								//if so blocked is still true
+								blocked = true;
+							}
+						}
+						catch(ArrayIndexOutOfBoundsException e) {
+								
+						}
+					}
+						
+				}
+			}
+
+			//checks if the board if full (all the spots have tiles)
+			full = true;
+			//goes through all the tiles
+			for(int i = 0; i < GRIDROWS; i++) {
+				for(int j = 0; j < GRIDCOLUMNS; j++) {
+					//checks if it is empty
 					if(tiles[j][i] == null) {
+						//if so the board is not full
 						full = false;
 					}
 				}
 			}
 			
-	
+			//checks if blocked and full are true...
 			if(blocked == true && full == true) {
+				//in which case the player has lost
 				lost = true;
 			}
 			
+			//goes through all the tiles
 			for(int i = 0; i < GRIDROWS; i++) {
 				for(int j = 0; j < GRIDCOLUMNS; j++) {
 					if(tiles[j][i] != null) {
+						//checks if any tile is 2048
 						if(tiles[j][i].GetValue() == 2048) {
+							//if so the play has won!!
 							won = true;
 						}
 					}
 				}
 			}
-
 		}
 			
 		
-		// set up your variables, lists, etc here
+		//draws the starting board
 		public void setup() {
 			int count = 0;
+			//draws two 2 tiles on random spots on the board
 			while(count < 2) {
 				int randomx = (int) (Math.random()*4 + 0);
 				int randomy = (int) (Math.random()*4 + 0);
@@ -131,50 +138,59 @@ package twentyfourtyeight;
 		
 		// draw a black background along with your lasers, aliens, and player here
 		public void draw(Graphics g) {
+			//fills ion the background color gray
 			g.setColor(new Color(237, 237, 223));
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			
-			// your code here
+			//draws the dark gray grid columns
 			for(int i = 0; i < GRIDCOLUMNS+1; i++) {
 				g.setColor(Color.GRAY);
 				g.fillRect(0, TILEHEIGHT * i, WIDTH, GRIDHEIGHT);
 			}
+			//draws the dark gray grid rows
 			for(int i = 0; i < GRIDROWS+1; i++) {
 				g.setColor(Color.GRAY);
-				//Draws rectangle +40 accounts for java error
+				//draws rows +40 accounts for java graphics error
 				g.fillRect(TILEWIDTH * i, 0, GRIDWIDTH, HEIGHT+40);
 			}
-			
+			//goes through the tile list
 			for(int i = 0; i < GRIDCOLUMNS; i++) {
 				for(int j = 0; j < GRIDROWS; j++) {
 					if(tiles[j][i] != null) {
+						//draws the tile if it isnt susposed to be empty
 						tiles[j][i].draw(g);
 					}
 				}
 			}
 			
 			
-			g.setColor(Color.blue);
+			g.setColor(Color.red);
+			//if the player has lost
 			if (lost) {
+				//clears the board
 				for(int i = 0; i < GRIDROWS; i++) {
 					for(int j = 0; j < GRIDCOLUMNS; j++) {
 						tiles[j][i] = null;
 					}
 				}
+				//draws "you lose" in the center of the board
 				g.drawString("You lose", WIDTH/2-25, HEIGHT/2);
 			}
+			//if the player has won
 			if (won) {
+				//clears the board
 				for(int i = 0; i < GRIDROWS; i++) {
 					for(int j = 0; j < GRIDCOLUMNS; j++) {
 						tiles[j][i] = null;
 					}
 				}
+				//draws "you win" in the center of the board
 				g.drawString("You win!", WIDTH/2-25, HEIGHT/2);
 			}
 		}
 		
-		// ******* DON'T TOUCH BELOW CODE ************//
 		
+		//FILLER
 		public twentyfourtyeightfiller() {
 			setup();
 			JFrame frame = new JFrame();
@@ -201,7 +217,6 @@ package twentyfourtyeight;
 			frame.setVisible(true);
 			
 			while (true) {
-					move();
 					checkWin();
 					frame.getContentPane().repaint();
 				try {Thread.sleep(20);} 
@@ -209,6 +224,7 @@ package twentyfourtyeight;
 			}
 		}
 		
+		//all below classes make the tiles move
 		//makes the tiles move right when the user presses the right arrow, and combine if they reach an equal value tile
 		private class RightAction extends AbstractAction {
 			public void actionPerformed(ActionEvent e) {
